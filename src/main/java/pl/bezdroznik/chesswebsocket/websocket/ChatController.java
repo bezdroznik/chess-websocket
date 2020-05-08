@@ -18,5 +18,3 @@ public class ChatController {
         return new OutputMessage(message.getFrom(), message.getText(), time);
     }
 }
-
-

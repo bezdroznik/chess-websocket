@@ -5,7 +5,7 @@
     <script src="./js/stomp.js"></script>
     <script type="text/javascript">
             var stompClient = null;
-
+            connect();
             function setConnected(connected) {
                 document.getElementById('connect').disabled = connected;
                 document.getElementById('disconnect').disabled = !connected;
