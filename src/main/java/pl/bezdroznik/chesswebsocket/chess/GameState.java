@@ -8,11 +8,15 @@ import lombok.Setter;
 public class GameState {
 
     public GameState() {
-        this.chessboard = Chessboard.fillChessboardWithTiles();
-        this.chessboard = Chessboard.fillWithPieces(chessboard);
+        this.chessboard = Chessboard.getStandardChessboard();
         this.turn = Turn.WHITE;
     }
 
     Chessboard chessboard;
     Turn turn;
+
+    public void analyze(SelectedTile selectedTile) {
+        // LECISZ PIŹDZIAK
+    }
+
 }

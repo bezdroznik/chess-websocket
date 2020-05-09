@@ -29,8 +29,12 @@ function startGame() {
     stompClient.send("/app/newgame", {}, JSON.stringify({}));
 }
 
+function selectTile(name) {
+    stompClient.send("/app/move", {}, JSON.stringify({'name':name}));
+}
+
 function update(gamestate) {
-    for (var row of gamestate.chessboard.row) {
+    for (var row of gamestate.chessboard.rows) {
         for(var tile of row) {
             if (tile.piece != null) {
                 document.getElementById(tile.name).innerHTML = '<img src="img/' + tile.piece.color.substring(0, 1) + tile.piece.symbol + '.png">';

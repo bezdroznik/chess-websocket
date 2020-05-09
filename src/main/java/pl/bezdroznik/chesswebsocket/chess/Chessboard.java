@@ -3,35 +3,38 @@ package pl.bezdroznik.chesswebsocket.chess;
 import lombok.Getter;
 import lombok.Setter;
 import pl.bezdroznik.chesswebsocket.chess.pieces.*;
+import java.util.Arrays;
 
 @Getter
 @Setter
 public class Chessboard {
 
-    private Tile[][] row;
+    private Tile[][] rows;
 
     private Chessboard() {
-        this.row = new Tile[8][8];
     }
 
-    public static Chessboard fillWithPieces(Chessboard chessboard){
-        fillWhitePieces(chessboard);
-        fillBlackPieces(chessboard);
-
+    public static Chessboard getStandardChessboard() {
+        Chessboard chessboard = new Chessboard();
+        chessboard.fillWithTiles();
+        chessboard.fillWithPieces();
         return chessboard;
     }
 
-    private static Chessboard fillWhitePieces(Chessboard chessboard){
-        Tile[] whitePawnsRow = chessboard.row[1];
-        Tile[] whitePiecesRow = chessboard.row[0];
+    public void fillWithPieces(){
+        this.fillWhitePieces();
+        this.fillBlackPieces();
+    }
+
+    private void fillWhitePieces(){
+        Tile[] whitePawnsRow = this.rows[1];
+        Tile[] whitePiecesRow = this.rows[0];
 
         fillPawns(whitePawnsRow, Piece.Color.WHITE);
         fillMajorPieces(whitePiecesRow, Piece.Color.WHITE);
-
-        return chessboard;
     }
 
-    private static void fillMajorPieces(Tile[] tiles, Piece.Color color) {
+    private void fillMajorPieces(Tile[] tiles, Piece.Color color) {
         tiles[0].setPiece(new Rook(color));
         tiles[7].setPiece(new Rook(color));
         tiles[1].setPiece(new Knight(color));
@@ -42,44 +45,37 @@ public class Chessboard {
         tiles[4].setPiece(new King(color));
     }
 
-    private static void fillPawns(Tile[] pawnsRow, Piece.Color color) {
-        for (Tile tile : pawnsRow) {
-            tile.setPiece(new Pawn(color));
-        }
+    private void fillPawns(Tile[] pawnsRow, Piece.Color color) {
+        Arrays.stream(pawnsRow)
+                .forEach(tile -> tile.setPiece(new Pawn(color)));
     }
 
-    private static Chessboard fillBlackPieces(Chessboard chessboard) {
-        Tile[] blackPawnsRow = chessboard.row[6];
-        Tile[] blackPiecesRow = chessboard.row[7];
+    private void fillBlackPieces() {
+        Tile[] blackPawnsRow = this.rows[6];
+        Tile[] blackPiecesRow = this.rows[7];
 
         fillPawns(blackPawnsRow, Piece.Color.BLACK);
         fillMajorPieces(blackPiecesRow, Piece.Color.BLACK);
-
-        return chessboard;
-
     }
 
-    public static Chessboard fillChessboardWithTiles() {
-        Chessboard chessboard = new Chessboard();
-        Tile[][] board = chessboard.getRow();
-        for (int row = 0; row < board.length; row++) {
-            for (int column = 0; column < board[row].length ; column++) {
+    public void fillWithTiles() {
+        this.rows = new Tile[8][8];
+        for (int row = 0; row < rows.length; row++) {
+            for (int column = 0; column < rows[row].length ; column++) {
                 if ((row + column) % 2 == 0){
-                    board[row][column] = Tile.whiteTile().setName(row, column);
+                    rows[row][column] = Tile.whiteTile().setName(row, column);
                 } else {
-                    board[row][column] = Tile.blackTile().setName(row, column);
+                    rows[row][column] = Tile.blackTile().setName(row, column);
                 }
             }
         }
-        fillWithPieces(chessboard);
-        return chessboard;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-         for (Tile[] row : row) {
+         for (Tile[] row : rows) {
             for (Tile column : row) {
                 sb.append(column.toString())
                 .append("\t");
