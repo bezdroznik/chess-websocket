@@ -1,5 +1,10 @@
 package pl.bezdroznik.chesswebsocket.chess.pieces;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public abstract class Piece {
 
     public Piece(Color color) {
@@ -11,7 +16,4 @@ public abstract class Piece {
     }
 
     Color color;
-
-
-
 }

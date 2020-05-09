@@ -9,7 +9,6 @@ public class ChessWebsocketApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ChessWebsocketApplication.class, args);
-		System.out.println(Chessboard.fillChessboardWithTiles());
 	}
 
 }
