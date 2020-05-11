@@ -7,15 +7,14 @@ import org.springframework.stereotype.Controller;
 import pl.bezdroznik.chesswebsocket.chess.GameState;
 import pl.bezdroznik.chesswebsocket.chess.SelectedTile;
 
-import javax.servlet.http.HttpSessionListener;
-import javax.websocket.OnOpen;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 @Controller
 public class GameController {
 
+    // Po co ta klasa NewGameRequest? Spring tego nie wymaga a jak dla mnie to nic to nie robi? Jakaś przyszła funkcjonalność?
+    // co robi ten headerAccessor, to jest do tego całego STOMP?
+    // to jest tylko do generowania id sesji i jej atrybutów, czy ma jakieś połączenie z frontem?
+    // no bo zasięg obiektu headerAccessor jest tylko w metodzie newGame, to gdzie jest on przechowywany, żeby go potem użyć w move?
     @MessageMapping("/newgame")
     @SendTo("/topic/board")
     public GameState newGame(NewGameRequest newGameRequest, SimpMessageHeaderAccessor headerAccessor) throws Exception {

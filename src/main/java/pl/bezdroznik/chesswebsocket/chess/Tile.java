@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -26,6 +25,8 @@ public class Tile {
     private Color color;
     private Piece piece;
     private String name;
+    private int row;
+    private int column;
 
     private Tile(Color color) {
         this.color = color;
@@ -43,9 +44,12 @@ public class Tile {
         return new Tile(Color.BLACK);
     }
 
+    // dlaczego typ zwracany nie jest  void? i tak by zaktualizowało
     public Tile setName(int row, int column) {
         this.name = columnNames.get(column);
         this.name += String.valueOf(row + 1);
+        this.row = row;
+        this.column = column;
         return this;
     }
 
@@ -55,6 +59,13 @@ public class Tile {
             return piece.toString();
         }
         return color.toString();
+    }
+
+    public boolean isTileOccupied() {
+        if (piece != null) {
+            return true;
+        }
+    return false;
     }
 }
 

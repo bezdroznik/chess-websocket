@@ -34,6 +34,14 @@ public class Chessboard {
         fillMajorPieces(whitePiecesRow, Piece.Color.WHITE);
     }
 
+    private void fillBlackPieces() {
+        Tile[] blackPawnsRow = this.rows[6];
+        Tile[] blackPiecesRow = this.rows[7];
+
+        fillPawns(blackPawnsRow, Piece.Color.BLACK);
+        fillMajorPieces(blackPiecesRow, Piece.Color.BLACK);
+    }
+
     private void fillMajorPieces(Tile[] tiles, Piece.Color color) {
         tiles[0].setPiece(new Rook(color));
         tiles[7].setPiece(new Rook(color));
@@ -50,14 +58,6 @@ public class Chessboard {
                 .forEach(tile -> tile.setPiece(new Pawn(color)));
     }
 
-    private void fillBlackPieces() {
-        Tile[] blackPawnsRow = this.rows[6];
-        Tile[] blackPiecesRow = this.rows[7];
-
-        fillPawns(blackPawnsRow, Piece.Color.BLACK);
-        fillMajorPieces(blackPiecesRow, Piece.Color.BLACK);
-    }
-
     public void fillWithTiles() {
         this.rows = new Tile[8][8];
         for (int row = 0; row < rows.length; row++) {
@@ -69,6 +69,18 @@ public class Chessboard {
                 }
             }
         }
+    }
+
+    public Tile findTileFromChessboard(String selectedName) {
+        for (Tile[] tiles : rows) {
+            for (Tile tile : tiles) {
+                String TileName = tile.getName();
+                if (selectedName.equals(TileName)) {
+                    return tile;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
