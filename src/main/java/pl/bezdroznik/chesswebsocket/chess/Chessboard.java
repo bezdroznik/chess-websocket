@@ -9,12 +9,12 @@ import java.util.Arrays;
 @Setter
 public class Chessboard {
 
-    private Tile[][] rows;
+    private Tile[][] tiles;
 
     private Chessboard() {
     }
 
-    public static Chessboard getStandardChessboard() {
+    public static Chessboard getStandardChessboard() { // jakby szachownica byla static to by nie trzeba dawac caly czas w funkcjach jako argument
         Chessboard chessboard = new Chessboard();
         chessboard.fillWithTiles();
         chessboard.fillWithPieces();
@@ -27,16 +27,16 @@ public class Chessboard {
     }
 
     private void fillWhitePieces(){
-        Tile[] whitePawnsRow = this.rows[1];
-        Tile[] whitePiecesRow = this.rows[0];
+        Tile[] whitePawnsRow = this.tiles[1];
+        Tile[] whitePiecesRow = this.tiles[0];
 
         fillPawns(whitePawnsRow, Piece.Color.WHITE);
         fillMajorPieces(whitePiecesRow, Piece.Color.WHITE);
     }
 
     private void fillBlackPieces() {
-        Tile[] blackPawnsRow = this.rows[6];
-        Tile[] blackPiecesRow = this.rows[7];
+        Tile[] blackPawnsRow = this.tiles[6];
+        Tile[] blackPiecesRow = this.tiles[7];
 
         fillPawns(blackPawnsRow, Piece.Color.BLACK);
         fillMajorPieces(blackPiecesRow, Piece.Color.BLACK);
@@ -59,20 +59,20 @@ public class Chessboard {
     }
 
     public void fillWithTiles() {
-        this.rows = new Tile[8][8];
-        for (int row = 0; row < rows.length; row++) {
-            for (int column = 0; column < rows[row].length ; column++) {
+        this.tiles = new Tile[8][8];
+        for (int row = 0; row < tiles.length; row++) {
+            for (int column = 0; column < tiles[row].length ; column++) {
                 if ((row + column) % 2 == 0){
-                    rows[row][column] = Tile.whiteTile().setName(row, column);
+                    tiles[row][column] = Tile.whiteTile().setName(row, column);
                 } else {
-                    rows[row][column] = Tile.blackTile().setName(row, column);
+                    tiles[row][column] = Tile.blackTile().setName(row, column);
                 }
             }
         }
     }
 
-    public Tile findTileFromChessboard(String selectedName) {
-        for (Tile[] tiles : rows) {
+    public Tile findTileFromChessboard(String selectedName) { // to chyba nie powinno tu byc, Chessboard powinno tylko odpowiadac za tworzenie szachownicy
+        for (Tile[] tiles : tiles) {
             for (Tile tile : tiles) {
                 String TileName = tile.getName();
                 if (selectedName.equals(TileName)) {
@@ -87,7 +87,7 @@ public class Chessboard {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-         for (Tile[] row : rows) {
+         for (Tile[] row : tiles) {
             for (Tile column : row) {
                 sb.append(column.toString())
                 .append("\t");

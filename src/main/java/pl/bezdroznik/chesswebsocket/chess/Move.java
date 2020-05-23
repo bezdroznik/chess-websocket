@@ -1,7 +1,5 @@
 package pl.bezdroznik.chesswebsocket.chess;
 
-import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +8,10 @@ public class Move {
     List<Tile> possibleMoves = new ArrayList<>();
 
     public List<Tile> showPossibleMoves (Tile tile, Chessboard chessboard){
-        Piece piece = tile.getPiece();
-        Tile [][]rows = chessboard.getRows();
-        for (Tile[] tiles : rows) {
-            for (Tile testingTile : tiles) {
-                if (piece.canMove(tile, testingTile, chessboard)) {
+        Tile [][]tiles = chessboard.getTiles();
+        for (Tile[] row : tiles) {
+            for (Tile testingTile : row) {
+                if (canMove(tile, testingTile, chessboard)) {
                     possibleMoves.add(testingTile);
                 }
             }
@@ -22,9 +19,12 @@ public class Move {
         return possibleMoves;
     }
 
+    private boolean canMove(Tile tile, Tile selectedTile, Chessboard board) {
+        boolean pieceColorCondition = tile.getPiece().getColor() != selectedTile.getPiece().getColor();
+        boolean checkCondition = !Check.isCheck(board, selectedTile, selectedTile.getPiece());
+        boolean movesCondition = tile.getPiece().specificPiecesMovements(tile, selectedTile, board);
 
-
-
-
+        return pieceColorCondition && checkCondition && movesCondition;
+    }
 
 }
