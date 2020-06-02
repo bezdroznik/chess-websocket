@@ -10,7 +10,7 @@ import pl.bezdroznik.chesswebsocket.chess.Tile;
 public class Pawn extends Piece {
 
     String symbol = "P";
-    private boolean didPawnMove = false;
+    public boolean didPawnMove = false;
 
     public Pawn(Color color) {
         super(color);
@@ -28,27 +28,27 @@ public class Pawn extends Piece {
     private boolean canPawnAttack(int moveDirection, Tile currentPawnTile, Tile selectedTile){
         boolean directionCondition = selectedTile.getRow() - currentPawnTile.getRow() == moveDirection;
         boolean vectorCondition = Math.abs(selectedTile.getColumn() - currentPawnTile.getColumn()) == 1;
-        boolean colorCondition = color != selectedTile.getPiece().getColor() && selectedTile.getPiece().getColor() != null;
-        if (directionCondition && vectorCondition && colorCondition){
-            didPawnMove = true;
-            return true;
-        }
-        return false;
+        return directionCondition && vectorCondition && attackColorCondition(currentPawnTile, selectedTile);
     }
 
     private boolean canPawnMove(int moveDirection, Tile currentPawnTile, Tile selectedTile){
         boolean directionCondition = selectedTile.getRow() - currentPawnTile.getRow() == moveDirection;
         boolean firstPawnMoveCondition = selectedTile.getRow() - currentPawnTile.getRow() == moveDirection * 2;
         boolean vectorCondition = selectedTile.getColumn() - currentPawnTile.getColumn() == 0;
-        boolean colorCondition = color != selectedTile.getPiece().getColor() && selectedTile.getPiece().getColor() != null;
-        if (!didPawnMove && firstPawnMoveCondition && vectorCondition && colorCondition){
-            didPawnMove = true;
+        if (!didPawnMove && firstPawnMoveCondition && vectorCondition && moveColorCondition(selectedTile)){
             return true;
-        } else if (directionCondition && vectorCondition && colorCondition){
-            didPawnMove = true;
-            return true;
+        } else return directionCondition && vectorCondition && moveColorCondition(selectedTile);
+    }
+
+    private boolean moveColorCondition(Tile selectedTile) {
+        return selectedTile.getPiece() == null;
+    }
+
+    private boolean attackColorCondition(Tile currentPawnTile ,Tile selectedTile) {
+        if(selectedTile.getPiece() == null){
+            return false;
         }
-        return false;
+        return currentPawnTile.getPiece().getColor() != selectedTile.getPiece().getColor();
     }
 
     private int pawnMoveDirection(Tile currentTile){

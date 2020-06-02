@@ -3,6 +3,7 @@ package pl.bezdroznik.chesswebsocket.chess.pieces;
 import lombok.Getter;
 import lombok.Setter;
 import pl.bezdroznik.chesswebsocket.chess.Chessboard;
+import pl.bezdroznik.chesswebsocket.chess.Move;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 
 @Getter
@@ -20,9 +21,8 @@ public class Rook extends Piece {
         int vectorH = selectedTile.getRow() - currentRookTile.getRow();
         int vectorV = selectedTile.getColumn() - currentRookTile.getColumn();
         boolean vectorCondition = (vectorH == 0 || vectorV == 0);
-        boolean isWayFreeOfPiecesCondition = isWayFreeOfPieces(currentRookTile, selectedTile, board);
 
-        return (vectorCondition && isWayFreeOfPiecesCondition);
+        return (vectorCondition && Move.isWayFreeOfPieces(currentRookTile, selectedTile, board));
     }
 
     @Override

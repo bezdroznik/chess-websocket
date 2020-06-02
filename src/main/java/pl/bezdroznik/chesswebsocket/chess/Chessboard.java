@@ -14,7 +14,8 @@ public class Chessboard {
     private Chessboard() {
     }
 
-    public static Chessboard getStandardChessboard() { // jakby szachownica byla static to by nie trzeba dawac caly czas w funkcjach jako argument
+// jakby szachownica byla static to by nie trzeba dawac caly czas w funkcjach jako argument
+    public static Chessboard getStandardChessboard() {
         Chessboard chessboard = new Chessboard();
         chessboard.fillWithTiles();
         chessboard.fillWithPieces();

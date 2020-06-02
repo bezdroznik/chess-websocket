@@ -28,6 +28,7 @@ public class Tile {
     private int row;
     private int column;
 
+
     private Tile(Color color) {
         this.color = color;
     }
@@ -59,13 +60,6 @@ public class Tile {
             return piece.toString();
         }
         return color.toString();
-    }
-
-    public boolean isTileOccupied() {
-        if (piece != null) {
-            return true;
-        }
-    return false;
     }
 }
 
