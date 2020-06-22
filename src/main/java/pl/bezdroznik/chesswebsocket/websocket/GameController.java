@@ -25,11 +25,14 @@ public class GameController {
         return gameState;
     }
 
-    @MessageMapping("/move")
+    @MessageMapping("/selectPiece")
     @SendTo("/topic/board")
-    public GameState move(SelectedTile selectedTile, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        GameState gameState = (GameState) headerAccessor.getSessionAttributes().get("gamestate");
-        gameState.analyze(selectedTile);
-        return gameState;
+    public GameState select(SelectedTile selectedTile, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+        if (headerAccessor.getSessionAttributes().get("gamestate") != null){
+            GameState gameState = (GameState) headerAccessor.getSessionAttributes().get("gamestate");
+            gameState.analyze(selectedTile);
+            return gameState;
+        }
+        return null;
     }
 }

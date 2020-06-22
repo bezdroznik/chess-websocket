@@ -30,16 +30,18 @@ function startGame() {
 }
 
 function selectTile(name) {
-    stompClient.send("/app/move", {}, JSON.stringify({'name':name}));
+    stompClient.send("/app/selectPiece", {}, JSON.stringify({'name':name}));
 }
 
 function update(gamestate) {
-    for (var row of gamestate.chessboard.rows) {
+    for (var row of gamestate.chessboard.tiles) {
         for(var tile of row) {
             if (tile.piece != null) {
-                document.getElementById(tile.name).innerHTML = '<img src="img/' + tile.piece.color.substring(0, 1) + tile.piece.symbol + '.png">';
-            } else {
+                document.getElementById(tile.name).innerHTML = '<img src="img/' + tile.piece.color.substring(0, 1) + tile.piece.symbol + tile.backlightSymbol + '.png">';
+            } else if (tile.backlightSymbol == 'N') {
                 document.getElementById(tile.name).innerHTML = '';
+            } else{
+                document.getElementById(tile.name).innerHTML = '<img src="img/' + tile.backlightSymbol + '.png">';
             }
         }
     }

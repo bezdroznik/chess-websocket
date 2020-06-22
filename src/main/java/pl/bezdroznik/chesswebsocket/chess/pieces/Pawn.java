@@ -1,25 +1,22 @@
 package pl.bezdroznik.chesswebsocket.chess.pieces;
 
 import lombok.Getter;
-import lombok.Setter;
 import pl.bezdroznik.chesswebsocket.chess.Chessboard;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 
 @Getter
-@Setter
 public class Pawn extends Piece {
 
-    String symbol = "P";
-    public boolean didPawnMove = false;
+    private final String symbol = "P";
 
     public Pawn(Color color) {
         super(color);
     }
 
     @Override
-    public boolean specificPiecesMovements(Tile currentPawnTile, Tile selectedTile, Chessboard chessboard) {
+    public boolean canPieceDoSpecificMove(Tile currentPawnTile, Tile selectedTile, Chessboard chessboard) {
         int moveDirection = pawnMoveDirection(currentPawnTile);
-        boolean canPawnMove = canPawnMove(moveDirection, currentPawnTile, selectedTile);
+        boolean canPawnMove = canPawnMove(moveDirection, currentPawnTile, selectedTile, chessboard);
         boolean canPawnAttack = canPawnAttack(moveDirection, currentPawnTile, selectedTile);
 
         return canPawnMove || canPawnAttack;
@@ -31,13 +28,19 @@ public class Pawn extends Piece {
         return directionCondition && vectorCondition && attackColorCondition(currentPawnTile, selectedTile);
     }
 
-    private boolean canPawnMove(int moveDirection, Tile currentPawnTile, Tile selectedTile){
+    private boolean canPawnMove(int moveDirection, Tile currentPawnTile, Tile selectedTile, Chessboard chessboard){
         boolean directionCondition = selectedTile.getRow() - currentPawnTile.getRow() == moveDirection;
         boolean firstPawnMoveCondition = selectedTile.getRow() - currentPawnTile.getRow() == moveDirection * 2;
+        boolean isTileInFrontOfPawnOccupied = !isTileInFrontOfPawnOccupied(moveDirection, currentPawnTile, chessboard);
         boolean vectorCondition = selectedTile.getColumn() - currentPawnTile.getColumn() == 0;
-        if (!didPawnMove && firstPawnMoveCondition && vectorCondition && moveColorCondition(selectedTile)){
+        if (!didMove && firstPawnMoveCondition && vectorCondition && moveColorCondition(selectedTile) && isTileInFrontOfPawnOccupied){
             return true;
         } else return directionCondition && vectorCondition && moveColorCondition(selectedTile);
+    }
+
+    private boolean isTileInFrontOfPawnOccupied(int moveDirection, Tile currentPawnTile, Chessboard chessboard) {
+        Tile[][]tiles = chessboard.getTiles();
+        return tiles[currentPawnTile.getRow() + moveDirection][currentPawnTile.getColumn()].getPiece() != null;
     }
 
     private boolean moveColorCondition(Tile selectedTile) {

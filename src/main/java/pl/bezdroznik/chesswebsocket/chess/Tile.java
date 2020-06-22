@@ -22,36 +22,31 @@ public class Tile {
             entry(6,"G"),
             entry(7,"H"));
 
-    private Color color;
+    private final Color color;
     private Piece piece;
-    private String name;
-    private int row;
-    private int column;
+    private final String name;
+    private final int row;
+    private final int column;
+    private String backlightSymbol = "N";
 
 
-    private Tile(Color color) {
+    private Tile(Color color, int row, int column) {
         this.color = color;
+        this.name = columnNames.get(column) + (row + 1);
+        this.row = row;
+        this.column = column;
     }
 
     private enum Color {
         WHITE, BLACK
     }
 
-    public static Tile whiteTile() {
-        return new Tile(Color.WHITE);
+    public static Tile whiteTile(int row, int column) {
+        return new Tile(Color.WHITE, row, column);
     }
 
-    public static Tile blackTile() {
-        return new Tile(Color.BLACK);
-    }
-
-    // dlaczego typ zwracany nie jest  void? i tak by zaktualizowało
-    public Tile setName(int row, int column) {
-        this.name = columnNames.get(column);
-        this.name += String.valueOf(row + 1);
-        this.row = row;
-        this.column = column;
-        return this;
+    public static Tile blackTile(int row, int column) {
+        return new Tile(Color.BLACK, row, column);
     }
 
     @Override
