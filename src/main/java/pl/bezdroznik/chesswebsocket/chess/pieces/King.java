@@ -1,22 +1,20 @@
 package pl.bezdroznik.chesswebsocket.chess.pieces;
 
 import lombok.Getter;
-import lombok.Setter;
 import pl.bezdroznik.chesswebsocket.chess.Chessboard;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 
 @Getter
-@Setter
 public class King extends Piece {
 
-    String symbol = "K";
+    private final String symbol = "K";
 
     public King(Color color) {
         super(color);
     }
 
     @Override
-    public boolean specificPiecesMovements(Tile currentKingTile, Tile selectedTile, Chessboard chessboard) {
+    public boolean canPieceDoSpecificMove(Tile currentKingTile, Tile selectedTile, Chessboard chessboard) {
         int rowShift = selectedTile.getRow() - currentKingTile.getRow();
         int columnShift = selectedTile.getColumn() - currentKingTile.getColumn();
 

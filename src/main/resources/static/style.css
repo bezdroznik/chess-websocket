@@ -1,20 +1,58 @@
 #chessboard {
-    height: 800px;
-    width: 800px;
+    height: 860px;
+    width: 860px;
     margin: auto;
     padding: 0px;
-    outline: 1px solid black;
     -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
     -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 
 .tile {
+    outline: 1px solid black;
     height: 100px;
     width: 100px;
     display: inline-block;
     margin: 0px;
     float: left;
+}
+
+.horizontalLabel {
+    outline: 1px solid black;
+    font-size: 30px;
+    height: 30px;
+    width: 100px;
+    display: inline-block;
+    margin: 0px;
+    float: left;
+    text-align: center;
+}
+
+.verticalLabel {
+    outline: 1px solid black;
+    font-size: 30px;
+    height: 100px;
+    width: 30px;
+    display: inline-block;
+    margin: 0px;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.zeroLabel {
+    outline: 1px solid black;
+
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    margin: 0px;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .white {
@@ -25,6 +63,9 @@
     background-color: #D2B48C;
 }
 
+.labelColor {
+    background-color: #b3aca1;
+}
 img {
     width: 100px;
 }
