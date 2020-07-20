@@ -20,9 +20,4 @@ public class King extends Piece {
 
         return Math.abs(columnShift) <= 1 && Math.abs(rowShift) <= 1;
     }
-
-    @Override
-    public String toString() {
-        return "King";
-    }
 }

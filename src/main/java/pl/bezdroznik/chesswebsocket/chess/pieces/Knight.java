@@ -23,9 +23,4 @@ public class Knight extends Piece {
         }
         return Math.abs(columnShift) == 2 && Math.abs(rowShift) == 1;
     }
-
-    @Override
-    public String toString() {
-        return "Knight";
-    }
 }

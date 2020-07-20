@@ -22,9 +22,4 @@ public class Bishop extends Piece {
 
         return (resultant == 0 && Move.isWayFreeOfPieces(currentBishopTile, selectedTile, board));
     }
-
-    @Override
-    public String toString() {
-        return "Bishop";
-    }
 }

@@ -23,9 +23,4 @@ public class Queen extends Piece {
 
         return (vectorCondition && Move.isWayFreeOfPieces(currentQueenTile, selectedTile, board));
     }
-
-    @Override
-    public String toString() {
-        return "Queen";
-    }
 }

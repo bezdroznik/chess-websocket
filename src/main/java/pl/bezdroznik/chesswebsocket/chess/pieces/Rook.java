@@ -22,9 +22,4 @@ public class Rook extends Piece {
 
         return (vectorCondition && Move.isWayFreeOfPieces(currentRookTile, selectedTile, board));
     }
-
-    @Override
-    public String toString() {
-        return "Rook";
-    }
 }

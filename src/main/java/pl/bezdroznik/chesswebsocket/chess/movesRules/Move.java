@@ -45,7 +45,7 @@ public class Move {
         return currentTile.getPiece().getColor() != selectedTile.getPiece().getColor();
     }
 
-    public static boolean isWayFreeOfPieces(Tile currentPieceTile, Tile selectedTile, Chessboard board) { // chuj wie gdzie to dac, oddzielna klasa?
+    public static boolean isWayFreeOfPieces(Tile currentPieceTile, Tile selectedTile, Chessboard board) { // gdzie to dac, oddzielna klasa?
         int pieceRow = currentPieceTile.getRow();
         int pieceColumn = currentPieceTile.getColumn();
         int vectorH = selectedTile.getRow() - pieceRow;

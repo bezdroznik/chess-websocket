@@ -1,7 +1,10 @@
 package pl.bezdroznik.chesswebsocket.chess;
 
 import lombok.Getter;
-import pl.bezdroznik.chesswebsocket.chess.movesRules.*;
+import pl.bezdroznik.chesswebsocket.chess.movesRules.Castling;
+import pl.bezdroznik.chesswebsocket.chess.movesRules.EnPassant;
+import pl.bezdroznik.chesswebsocket.chess.movesRules.Move;
+import pl.bezdroznik.chesswebsocket.chess.movesRules.Promotion;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
 
 import java.util.ArrayList;
@@ -17,21 +20,30 @@ public class GameState {
         updateBacklightSymbol();
     }
 
+
+    private final String WHITE_PLAYER = "admin";
+    private final String BLACK_PLAYER = "user";
     private final Chessboard chessboard;
     private Turn turn;
     private List<Tile> possibleMoves;
     private boolean isTileSelected = false;
     private Tile currentTile;
 
-    public void analyze(SelectedTile selectedTile) {
-        if (findAllTilesOccupiedByPiecesThatCanMove(turn).isEmpty()){
+    private Tile promotionPawnTile;
+    private String canCastling = "no";
+
+    public void analyze(SelectedTile selectedTile, String userName) {
+        if (findAllTilesOccupiedByPiecesThatCanMove(turn).isEmpty()) {
             System.out.println("Checkmate!! trzeba przerwać program"); // trzeba to bedzie wysłąć metodą do fronta
         } else {
-            Tile currentTile = findTileFromChessboard(selectedTile.getName());
-            if (currentTile.getPiece() != null && !isTileSelected && checkTurn(currentTile)) {
-                showPossibleMoves(currentTile);
-            } else if (isTileSelected && this.currentTile.getPiece() != null) {
-                move(currentTile);
+            if ((userName.equals(WHITE_PLAYER) && turn == Turn.WHITE) || (userName.equals(BLACK_PLAYER) && turn == Turn.BLACK)) {
+
+                Tile currentTile = findTileFromChessboard(selectedTile.getName());
+                if (currentTile.getPiece() != null && !isTileSelected && checkTurn(currentTile)) {
+                    showPossibleMoves(currentTile);
+                } else if (isTileSelected && this.currentTile.getPiece() != null) {
+                    move(currentTile);
+                }
             }
             updateBacklightSymbol();
         }
@@ -84,18 +96,24 @@ public class GameState {
                 selectedTile.getPiece().didMove = true;
             }
 
-            Promotion promotion = new Promotion(selectedTile); // to zmienie, jest slabe w sumie. niepotrzebny obiekt
-            if(promotion.canPromotePawn()){
-                selectedTile.setPiece(promotion.promotion("queen")); // trzeba to zmienić żeby gracz wybierał a nie pisane z palca
+            if (Promotion.canPromotePawn(selectedTile)) {
+                promotionPawnTile = selectedTile;
+                canCastling = "yes";
+                selectedTile.setPiece(Promotion.promotion(promotionPawnTile, "queen"));
             }
             changeTurn();
         }
         isTileSelected = false;
     }
 
-    public static List<Tile> findAllTilesOccupiedByPiecesOfTheSameColor(Chessboard chessboard, Piece.Color colorOfSearchedPieces){
-        ArrayList <Tile> tilesOccupiedByPiecesOfTheSameColor  = new ArrayList<>();
-        Tile[][]tiles = chessboard.getTiles();
+    public void promotion(SelectedTile selectedTile) {
+        promotionPawnTile.setPiece(Promotion.promotion(promotionPawnTile, selectedTile.getName()));
+        canCastling = "no";
+    }
+
+    public static List<Tile> findAllTilesOccupiedByPiecesOfTheSameColor(Chessboard chessboard, Piece.Color colorOfSearchedPieces) {
+        ArrayList<Tile> tilesOccupiedByPiecesOfTheSameColor = new ArrayList<>();
+        Tile[][] tiles = chessboard.getTiles();
         for (Tile[] row : tiles) {
             Arrays.stream(row)
                     .filter(tile -> tile.getPiece() != null)
@@ -111,23 +129,23 @@ public class GameState {
     private List<Tile> findAllTilesOccupiedByPiecesThatCanMove(Turn turn) {
         ArrayList<Tile> allTilesOccupiedByPiecesThatCanMove = new ArrayList<>();
         Piece.Color currentPlayerColor;
-        if (turn == Turn.WHITE){
+        if (turn == Turn.WHITE) {
             currentPlayerColor = Piece.Color.WHITE;
-        } else{
+        } else {
             currentPlayerColor = Piece.Color.BLACK;
         }
         List<Tile> allTilesOccupiedByCurrentPlayerPieces = findAllTilesOccupiedByPiecesOfTheSameColor(chessboard, currentPlayerColor);
         for (Tile currentPlayerPieceTile : allTilesOccupiedByCurrentPlayerPieces) {
             Move move = new Move(chessboard, currentPlayerPieceTile);
-            if(!move.showPossibleMoves().isEmpty()){
+            if (!move.showPossibleMoves().isEmpty()) {
                 allTilesOccupiedByPiecesThatCanMove.add(currentPlayerPieceTile);
             }
         }
         return allTilesOccupiedByPiecesThatCanMove;
     }
 
-    private void updateBacklightSymbol(){
-        if (isTileSelected && !possibleMoves.isEmpty()){
+    private void updateBacklightSymbol() {
+        if (isTileSelected && !possibleMoves.isEmpty()) {
             BacklightTiles.setBacklightSymbol(chessboard, possibleMoves);
         } else {
             BacklightTiles.setBacklightSymbol(chessboard, findAllTilesOccupiedByPiecesThatCanMove(turn));

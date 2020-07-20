@@ -5,14 +5,8 @@ import pl.bezdroznik.chesswebsocket.chess.pieces.*;
 
 public class Promotion {
 
-    private final Tile promotedPawnTile;
 
-    public Promotion(Tile promotedPawnTile) {
-        this.promotedPawnTile = promotedPawnTile;
-    }
-
-    public Piece promotion(String promotionTypeName) {
-        if (canPromotePawn()) {
+    public static Piece promotion(Tile promotedPawnTile, String promotionTypeName) {
             switch (promotionTypeName) {
                 case "queen":
                     return new Queen(promotedPawnTile.getPiece().getColor());
@@ -23,11 +17,10 @@ public class Promotion {
                 case "bishop":
                     return new Bishop(promotedPawnTile.getPiece().getColor());
             }
-        }
         return null;
     }
 
-    public boolean canPromotePawn() {
+    public static boolean canPromotePawn(Tile promotedPawnTile) {
         if (promotedPawnTile.getPiece() instanceof Pawn) {
             return (promotedPawnTile.getPiece().getColor() == Piece.Color.WHITE && promotedPawnTile.getRow() == 7) ||
                     promotedPawnTile.getRow() == 0;
