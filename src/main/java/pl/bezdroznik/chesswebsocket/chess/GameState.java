@@ -21,8 +21,8 @@ public class GameState {
     }
 
 
-    private final String WHITE_PLAYER = "admin";
-    private final String BLACK_PLAYER = "user";
+    private final String WHITE_PLAYER = "user11";
+    private final String BLACK_PLAYER = "user22";
     private final Chessboard chessboard;
     private Turn turn;
     private List<Tile> possibleMoves;
@@ -127,7 +127,7 @@ public class GameState {
     // ale też nie w Check czy Chessboard. Może zrobić oddzielną klasę z metodami static do wyszukiwania z chessboard w sumie to 3 metody
 
     private List<Tile> findAllTilesOccupiedByPiecesThatCanMove(Turn turn) {
-        ArrayList<Tile> allTilesOccupiedByPiecesThatCanMove = new ArrayList<>();
+        List<Tile> allTilesOccupiedByPiecesThatCanMove = new ArrayList<>();
         Piece.Color currentPlayerColor;
         if (turn == Turn.WHITE) {
             currentPlayerColor = Piece.Color.WHITE;
