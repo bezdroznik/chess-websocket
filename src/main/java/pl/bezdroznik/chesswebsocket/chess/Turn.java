@@ -1,6 +1,10 @@
 package pl.bezdroznik.chesswebsocket.chess;
 
-public enum Turn {
+public class Turn {
 
-    WHITE, BLACK
+    public Color color;
+
+    public Turn(Color color) {
+        this.color = color;
+    }
 }

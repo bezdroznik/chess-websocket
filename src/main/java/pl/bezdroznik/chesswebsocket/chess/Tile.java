@@ -37,9 +37,7 @@ public class Tile {
         this.column = column;
     }
 
-    private enum Color {
-        WHITE, BLACK
-    }
+
 
     public static Tile whiteTile(int row, int column) {
         return new Tile(Color.WHITE, row, column);
@@ -47,14 +45,6 @@ public class Tile {
 
     public static Tile blackTile(int row, int column) {
         return new Tile(Color.BLACK, row, column);
-    }
-
-    @Override
-    public String toString() {
-        if (piece != null) {
-            return piece.toString();
-        }
-        return color.toString();
     }
 }
 
