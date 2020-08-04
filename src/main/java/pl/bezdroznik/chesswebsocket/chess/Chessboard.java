@@ -43,23 +43,23 @@ public class Chessboard {
         Tile[] whitePawnsRow = this.tiles[1];
         Tile[] whiteMajorPiecesRow = this.tiles[0];
 
-        fillPawns(whitePawnsRow, Piece.Color.WHITE);
-        fillMajorPieces(whiteMajorPiecesRow, Piece.Color.WHITE);
+        fillPawns(whitePawnsRow, Color.WHITE);
+        fillMajorPieces(whiteMajorPiecesRow, Color.WHITE);
     }
 
     private void fillBlackPieces() {
         Tile[] blackPawnsRow = this.tiles[6];
         Tile[] blackMajorPiecesRow = this.tiles[7];
-        fillPawns(blackPawnsRow, Piece.Color.BLACK);
-        fillMajorPieces(blackMajorPiecesRow, Piece.Color.BLACK);
+        fillPawns(blackPawnsRow, Color.BLACK);
+        fillMajorPieces(blackMajorPiecesRow, Color.BLACK);
     }
 
-    private void fillPawns(Tile[] pawnsRow, Piece.Color color) {
+    private void fillPawns(Tile[] pawnsRow, Color color) {
         Arrays.stream(pawnsRow)
                 .forEach(tile -> tile.setPiece(new Pawn(color)));
     }
 
-    private void fillMajorPieces(Tile[] tiles, Piece.Color color) {
+    private void fillMajorPieces(Tile[] tiles, Color color) {
         tiles[0].setPiece(new Rook(color));
         tiles[7].setPiece(new Rook(color));
         tiles[1].setPiece(new Knight(color));

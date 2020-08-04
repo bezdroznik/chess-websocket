@@ -1,6 +1,5 @@
 package pl.bezdroznik.chesswebsocket.chess;
 
-public enum Turn {
-
+public enum Color {
     WHITE, BLACK
 }

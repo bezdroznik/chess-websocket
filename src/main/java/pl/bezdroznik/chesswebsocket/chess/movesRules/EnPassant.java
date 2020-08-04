@@ -1,51 +1,49 @@
 package pl.bezdroznik.chesswebsocket.chess.movesRules;
 
-import pl.bezdroznik.chesswebsocket.chess.Chessboard;
+import pl.bezdroznik.chesswebsocket.chess.Color;
+import pl.bezdroznik.chesswebsocket.chess.GameState;
+import pl.bezdroznik.chesswebsocket.chess.Position;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Pawn;
-import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
 
 public class EnPassant {
-    private static Tile tileForEnPassanMoveAgainstWhitePlayer;
-    private static Tile tileForEnPassanMoveAgainstBlackPlayer;
 
-    private static void updateEnPassantState(Chessboard chessboard, Tile currentTile, Tile selectedTile){
-        if (currentTile.getPiece() instanceof Pawn && !currentTile.getPiece().didMove){
-            Tile[][] tiles = chessboard.getTiles();
-            if (currentTile.getRow() == 1 && selectedTile.getRow() == 3){
-                tileForEnPassanMoveAgainstWhitePlayer = tiles[2][currentTile.getColumn()];
-            } else if(currentTile.getRow() == 6 && selectedTile.getRow() == 4) {
-                tileForEnPassanMoveAgainstBlackPlayer = tiles[5][currentTile.getColumn()];
+    public static boolean canEnPassan(Position p){
+        boolean instanceCondition = p.currentTile.getPiece() instanceof Pawn;
+        boolean columnShiftCondition = Math.abs(Math.abs(p.currentTile.getColumn()) - Math.abs(p.selectedTile.getColumn())) == 1;
+        return instanceCondition && columnShiftCondition && colorCondition(p)
+                && Check.willBeNoCheckAfterMove(p, p.selectedTile);
+    }
+
+    private static void updateEnPassantState(GameState gs, Tile selectedTile){
+        if (gs.currentTile.getPiece() instanceof Pawn && !gs.currentTile.getPiece().didMove){
+            if (gs.currentTile.getRow() == 1 && selectedTile.getRow() == 3){
+                gs.tileForEnPassanMoveAgainstWhitePlayer = gs.tiles[2][gs.currentTile.getColumn()];
+            } else if(gs.currentTile.getRow() == 6 && selectedTile.getRow() == 4) {
+                gs.tileForEnPassanMoveAgainstBlackPlayer = gs.tiles[5][selectedTile.getColumn()];
             }
-        } else if (currentTile.getPiece().getColor() == Piece.Color.WHITE){
-            tileForEnPassanMoveAgainstWhitePlayer = null;
+        } else if (gs.currentTile.getPiece().getColor() == Color.WHITE){
+            gs.tileForEnPassanMoveAgainstWhitePlayer = null;
         } else{
-            tileForEnPassanMoveAgainstBlackPlayer = null;
+            gs.tileForEnPassanMoveAgainstBlackPlayer = null;
         }
     }
 
-    public static void enPassanMove(Chessboard chessboard, Tile currentTile, Tile selectedTile) {
-        if (canEnPassan(chessboard, currentTile, selectedTile)){
-            Tile[][] tiles = chessboard.getTiles();
-            tiles[currentTile.getRow()][selectedTile.getColumn()].setPiece(null);
+    public static void enPassanMove(GameState gs, Tile selectedTile) {
+        Position position = new Position(gs, gs.currentTile, selectedTile);
+        if (canEnPassan(position)){
+            gs.tiles[gs.currentTile.getRow()][selectedTile.getColumn()].setPiece(null);
         }
-        updateEnPassantState(chessboard, currentTile, selectedTile);
+        updateEnPassantState(gs, selectedTile);
     }
 
-    public static boolean canEnPassan(Chessboard chessboard, Tile currentTile, Tile selectedTile){
-        boolean instanceCondition = currentTile.getPiece() instanceof Pawn;
-        boolean columnShiftCondition = Math.abs(Math.abs(currentTile.getColumn()) - Math.abs(selectedTile.getColumn())) == 1;
-        return instanceCondition && columnShiftCondition && colorCondition(currentTile, selectedTile)
-                && Check.willBeNoCheckAfterMove(chessboard, currentTile, selectedTile);
-    }
-
-    private static boolean colorCondition(Tile currentTile, Tile selectedTile){
-        if (currentTile.getPiece().getColor() == Piece.Color.WHITE){
-            boolean rowCondition = currentTile.getRow() == 4 && selectedTile.getRow() == 5;
-            return rowCondition && tileForEnPassanMoveAgainstBlackPlayer == selectedTile;
+    private static boolean colorCondition(Position p){
+        if (p.currentTile.getPiece().getColor() == Color.WHITE){
+            boolean rowCondition = p.currentTile.getRow() == 4 && p.selectedTile.getRow() == 5;
+            return rowCondition && p.tileForEnPassanMoveAgainstBlackPlayer == p.selectedTile;
         } else {
-            boolean rowCondition = currentTile.getRow() == 3 && selectedTile.getRow() == 2;
-            return rowCondition && tileForEnPassanMoveAgainstWhitePlayer == selectedTile;
+            boolean rowCondition = p.currentTile.getRow() == 3 && p.selectedTile.getRow() == 2;
+            return rowCondition && p.tileForEnPassanMoveAgainstWhitePlayer == p.selectedTile;
         }
     }
 

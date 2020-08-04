@@ -19,6 +19,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/game")
                 .withSockJS()
                 .setInterceptors(new HttpHandshakeInterceptor());
-
     }
 }

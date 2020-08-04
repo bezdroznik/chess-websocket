@@ -1,15 +1,13 @@
 package pl.bezdroznik.chesswebsocket.websocket;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-import pl.bezdroznik.chesswebsocket.chess.GameState;
+
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 

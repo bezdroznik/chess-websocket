@@ -1,27 +1,76 @@
+body {
+    background: url('img/chessB.jpg');
+    background-size: 100%;
+    background-attachment: fixed;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+header{
+    margin-bottom: 15px;
+}
+
+div.container{
+    width: 1140px;
+    margin: auto;
+    padding: 0 15px;
+}
+
+div.content{
+    overflow: auto;
+}
+
 #chessboard {
-    height: 860px;
-    width: 860px;
+    height: 680px;
+    width: 680px;
     margin: auto;
     padding: 0px;
-    -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+    float: left;
+
+}
+
+#chat {
+    background: rgba(255, 255, 255, 0.6);
+    margin-left: 15px;
+    float: left;
+}
+
+#promotion {
+  height: 360px;
+  width: 360px;
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
 }
 
 .tile {
     outline: 1px solid black;
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
     display: inline-block;
     margin: 0px;
     float: left;
 }
 
+.selectedTile {
+    -webkit-box-shadow: inset 0px 0px 20px 0px rgba(94,255,0,1);
+    -moz-box-shadow: inset 0px 0px 20px 0px rgba(94,255,0,1);
+    box-shadow: inset 0px 0px 20px 0px rgba(94,255,0,1);
+}
+
+.availableTile {
+    -webkit-box-shadow: inset 0px 0px 24px 0px rgba(228,41,41,1);
+    -moz-box-shadow: inset 0px 0px 24px 0px rgba(228,41,41,1);
+    box-shadow: inset 0px 0px 24px 0px rgba(228,41,41,1);
+}
+
 .horizontalLabel {
     outline: 1px solid black;
-    font-size: 30px;
-    height: 30px;
-    width: 100px;
+    font-size: 20px;
+    height: 20px;
+    width: 80px;
     display: inline-block;
     margin: 0px;
     float: left;
@@ -30,9 +79,9 @@
 
 .verticalLabel {
     outline: 1px solid black;
-    font-size: 30px;
-    height: 100px;
-    width: 30px;
+    font-size: 20px;
+    height: 80px;
+    width: 20px;
     display: inline-block;
     margin: 0px;
     float: left;
@@ -45,14 +94,10 @@
 .zeroLabel {
     outline: 1px solid black;
 
-    height: 30px;
-    width: 30px;
-    display: inline-block;
+    height: 20px;
+    width: 20px;
     margin: 0px;
     float: left;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .white {
@@ -67,5 +112,10 @@
     background-color: #b3aca1;
 }
 img {
-    width: 100px;
+    width: 80px;
+}
+
+#messageToSend{
+    width: 200px;
+    max-width: 350px;
 }
