@@ -1,96 +1,53 @@
 package pl.bezdroznik.chesswebsocket.chess.movesRules;
 
-import pl.bezdroznik.chesswebsocket.chess.Chessboard;
+import pl.bezdroznik.chesswebsocket.chess.Position;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 import pl.bezdroznik.chesswebsocket.chess.pieces.King;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Rook;
 
 public class Castling {
 
-    private final Chessboard chessboard;
-    private final Tile currentTile;
-    private final Tile selectedTile;
-    private final Tile[][] tiles;
-
-    private Tile kingTile;
-    private Tile rookTile;
-    private boolean piecesInstanceCondition;
-
-    public Castling(Chessboard chessboard, Tile currentTile, Tile selectedTile) {
-        this.chessboard = chessboard;
-        this.currentTile = currentTile;
-        this.selectedTile = selectedTile;
-        this.tiles = chessboard.getTiles();
-        findKingAndRookTiles();
+    public static boolean canCastling(Position p) {
+        if (p.currentTile.getPiece() == null || p.selectedTile.getPiece() == null){
+            return false;
+        }
+        boolean piecesInstanceCondition = p.currentTile.getPiece() instanceof King && p.selectedTile.getPiece() instanceof Rook;
+        boolean colorCondition = p.currentTile.getPiece().getColor() == p.selectedTile.getPiece().getColor();
+        boolean didMoveCondition = !p.currentTile.getPiece().didMove && !p.selectedTile.getPiece().didMove;
+        return (piecesInstanceCondition && didMoveCondition && colorCondition
+                && PieceMoveValidator.isWayFreeOfPieces(p) && checkCondition(p));
     }
 
-    private void findKingAndRookTiles() {
-        if (currentTile.getPiece() instanceof King && selectedTile.getPiece() instanceof Rook) {
-            kingTile = currentTile;
-            rookTile = selectedTile;
-            piecesInstanceCondition = true;
-        } else if (currentTile.getPiece() instanceof Rook && selectedTile.getPiece() instanceof King) {
-            kingTile = selectedTile;
-            rookTile = currentTile;
-            piecesInstanceCondition = true;
-        } else {
-            piecesInstanceCondition = false;
+    private static boolean checkCondition(Position p) {
+        return (p.selectedTile.getColumn() == 0 &&
+                singleTileCheckCondition(p,-2) && singleTileCheckCondition(p,-1) && singleTileCheckCondition(p,0))
+                || (p.selectedTile.getColumn() == 7 &&
+                singleTileCheckCondition(p,0) && singleTileCheckCondition(p,1) && singleTileCheckCondition(p,2));
+    }
+
+    private static boolean singleTileCheckCondition(Position p, int number) {
+        Tile currentTile = p.currentTile;
+        Tile selectedTile = p.selectedTile;
+        boolean condition = Check.willBeNoCheckAfterMove(p, p.tiles[p.currentTile.getRow()][p.currentTile.getColumn() + number]);
+        p.currentTile = currentTile;
+        p.selectedTile = selectedTile;
+        return condition;
+    }
+
+    public static void castlingMove(Position p) {
+        if (p.selectedTile.getColumn() == 0) {
+            updateKingAndRookPosition(p, 2, 3);
+        } else if (p.selectedTile.getColumn() == 7) {
+            updateKingAndRookPosition(p, 6, 5);
         }
     }
 
-    public boolean canCastling() {
-        return (piecesInstanceCondition && didMoveCondition() && areNoPiecesBetweenRookAndKing() && checkCondition());
+    private static void updateKingAndRookPosition(Position p, int newKingColumn, int newRookColumn) {
+        p.selectedTile.getPiece().didMove = true;
+        p.currentTile.getPiece().didMove = true;
+        p.tiles[p.currentTile.getRow()][newRookColumn].setPiece(p.selectedTile.getPiece());
+        p.tiles[p.currentTile.getRow()][newKingColumn].setPiece(p.currentTile.getPiece());
+        p.tiles[p.currentTile.getRow()][p.selectedTile.getColumn()].setPiece(null);
+        p.tiles[p.currentTile.getRow()][p.currentTile.getColumn()].setPiece(null);
     }
-
-    private boolean didMoveCondition() {
-        return !kingTile.getPiece().didMove && !rookTile.getPiece().didMove && rowCondition();
-    }
-
-    private boolean rowCondition() {
-        if (kingTile.getRow() == 0 && rookTile.getRow() == 0) {
-            return true;
-        }
-        return kingTile.getRow() == 7 && rookTile.getRow() == 7;
-    }
-
-    private boolean areNoPiecesBetweenRookAndKing() {
-        int castlingRow = kingTile.getRow();
-        if (rookTile.getColumn() == 0) {
-            return tiles[castlingRow][1].getPiece() == null && tiles[castlingRow][2].getPiece() == null && tiles[castlingRow][3].getPiece() == null;
-        } return tiles[castlingRow][5].getPiece() == null && tiles[castlingRow][6].getPiece() == null;
-    }
-
-    private boolean checkCondition() {
-        int castlingRow = kingTile.getRow();
-
-        if (rookTile.getColumn() == 0 &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, tiles[castlingRow][kingTile.getColumn() - 2]) &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, tiles[castlingRow][kingTile.getColumn() - 1]) &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, kingTile)) {
-            return true;
-        } return (rookTile.getColumn() == 7 &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, kingTile) &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, tiles[castlingRow][kingTile.getColumn() + 1]) &&
-                Check.willBeNoCheckAfterMove(chessboard, kingTile, tiles[castlingRow][kingTile.getColumn() + 2]));
-    }
-
-    public void castlingMove() {
-        if (rookTile.getColumn() == 0) {
-            updateKingAndRookPosition(2, 3);
-        } else if (rookTile.getColumn() == 7) {
-            updateKingAndRookPosition(6, 5);
-        }
-    }
-
-    private void updateKingAndRookPosition(int newKingColumn, int newRookColumn) {
-        int castlingRow = kingTile.getRow();
-
-        rookTile.getPiece().didMove = true;
-        kingTile.getPiece().didMove = true;
-        tiles[castlingRow][newRookColumn].setPiece(rookTile.getPiece());
-        tiles[castlingRow][newKingColumn].setPiece(kingTile.getPiece());
-        tiles[castlingRow][rookTile.getColumn()].setPiece(null);
-        tiles[castlingRow][kingTile.getColumn()].setPiece(null);
-    }
-
 }

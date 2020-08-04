@@ -1,7 +1,12 @@
-<html>
+<!DOCTYPE html>
+
+<html lang="en">
 <head>
     <title>Chess WebSocket</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8" />
+    <meta name="description" content="Opis strony"/>
+    <link href="https://fonts.googleapis.com/css?family=Bebas Neue" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="menuStyle.css">
     <script src="./js/sockjs-0.3.4.js"></script>
     <script src="./js/stomp.js"></script>
     <script src="./js/game.js"></script>
@@ -9,16 +14,26 @@
 <body>
 <div class="container">
     <header>
+        <div class="title">
+            <h1>Chess Websocket application</h1>
+        </div>
         <nav>
             <ul>
-                <li id="newGame" onclick="startGame();"><a href="game.html"><span>New Game</span></a></li>
-                <li id="joinGame" onclick="joinGame();"><a href="game.html"><span>Join Game</span></a></li>
-                <li id="logIn" onclick="logIn();"><a href="login.html"><span>Log In</span></a></li>
-                <li id="signUp" onclick="signUp();"><a href="register.html"><span>Sign Up</span></a></li>
+                <li id="login" class="log-button"><a href="login"><span>Login</span></a></li>
+                <li id="registration" class="log-button"><a href="registration"><span>Registration</span></a></li>
+                <li id="logout" class="log-button" style="display:none;"><a href="logout"><span>logout</span></a></li>
             </ul>
         </nav>
     </header>
-
+    <div class="menu">
+        <a class="menu-button" href="game.html" onclick="startGame();">New Game</a>
+    </div>
+    <div class="menu">
+        <a class="menu-button" href="joingame.html">Join Game</a>
+    </div>
+    <div class="menu">
+        <a class="menu-button" href="records.html">Records</a>
+    </div>
 </div>
 </body>
 </html>

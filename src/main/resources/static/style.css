@@ -2,6 +2,7 @@ body {
     background: url('img/chessB.jpg');
     background-size: 100%;
     background-attachment: fixed;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 header{

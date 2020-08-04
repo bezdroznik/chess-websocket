@@ -11,7 +11,7 @@ public class ChatController {
     @MessageMapping("/chat")
     @SendTo("/topic/chatStomp")
     public ChatMessage get(ChatMessage chatMessage, StompHeaderAccessor headerAccessor) {
-        System.out.println("chat " + headerAccessor);
+        chatMessage.setUser(headerAccessor.getUser().getName());
         return chatMessage;
     }
 }

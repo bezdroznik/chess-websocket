@@ -1,5 +1,6 @@
 package pl.bezdroznik.chesswebsocket.chess.movesRules;
 
+import pl.bezdroznik.chesswebsocket.chess.Color;
 import pl.bezdroznik.chesswebsocket.chess.Tile;
 import pl.bezdroznik.chesswebsocket.chess.pieces.*;
 
@@ -22,7 +23,7 @@ public class Promotion {
 
     public static boolean canPromotePawn(Tile promotedPawnTile) {
         if (promotedPawnTile.getPiece() instanceof Pawn) {
-            return (promotedPawnTile.getPiece().getColor() == Piece.Color.WHITE && promotedPawnTile.getRow() == 7) ||
+            return (promotedPawnTile.getPiece().getColor() == Color.WHITE && promotedPawnTile.getRow() == 7) ||
                     promotedPawnTile.getRow() == 0;
             }
         return false;

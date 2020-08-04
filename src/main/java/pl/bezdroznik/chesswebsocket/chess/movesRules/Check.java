@@ -2,9 +2,7 @@ package pl.bezdroznik.chesswebsocket.chess.movesRules;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.bezdroznik.chesswebsocket.chess.Chessboard;
-import pl.bezdroznik.chesswebsocket.chess.GameState;
-import pl.bezdroznik.chesswebsocket.chess.Tile;
+import pl.bezdroznik.chesswebsocket.chess.*;
 import pl.bezdroznik.chesswebsocket.chess.pieces.King;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
 
@@ -12,31 +10,28 @@ import java.util.List;
 
 class Check {
 
-    public static boolean willBeNoCheckAfterMove(Chessboard chessboard, Tile currentTile, Tile selectedTile){
-        if (currentTile != selectedTile){
-            saveTilesForRollback(currentTile, selectedTile);
-            fillTilesWithPiecesForCheckTest(currentTile, selectedTile);
+    public static boolean willBeNoCheckAfterMove(Position p, Tile selectedTile){
+        if (p.currentTile != selectedTile){
+            saveTilesForRollback(p.currentTile, selectedTile);
+            fillTilesWithPiecesForCheckTest(p.currentTile, selectedTile);
         }
-        Tile kingTile = findKingTileFromChessboard(chessboard, selectedTile.getPiece());
-        Piece.Color opponentPiecesColor = findOpponentPiecesColor(kingTile);
-        List <Tile> allTilesOccupiedByOpponentPieces = GameState.findAllTilesOccupiedByPiecesOfTheSameColor(chessboard, opponentPiecesColor);
+        Tile kingTile = findKingTileFromChessboard(p.tiles, selectedTile.getPiece().getColor());
+        Color opponentPiecesColor = findOpponentPiecesColor(kingTile.getPiece().getColor());
+        List <Tile> allTilesOccupiedByOpponentPieces = Analyze.findAllTilesOccupiedByPiecesOfTheSameColor(p.tiles, opponentPiecesColor);
         for (Tile testingEnemyPieceTile : allTilesOccupiedByOpponentPieces){
-            if (canSelectedPieceAttackTheKing(testingEnemyPieceTile, kingTile, chessboard)){
-                rollbackTilesAfterCheckTest(currentTile, selectedTile);
+            if (canSelectedPieceAttackTheKing(p, testingEnemyPieceTile, kingTile)){
+                rollbackTilesAfterCheckTest(p.currentTile, selectedTile);
                 return false;
             }
         }
-        rollbackTilesAfterCheckTest(currentTile, selectedTile);
+        rollbackTilesAfterCheckTest(p.currentTile, selectedTile);
         return true;
     }
 
-    private static Piece.Color findOpponentPiecesColor(Tile tileOccupiedByCurrentPlayerPiece) {
-        if (tileOccupiedByCurrentPlayerPiece.getPiece().getColor() == Piece.Color.WHITE){
-            return Piece.Color.BLACK;
-        } return  Piece.Color.WHITE;
-    }
-
     private static void saveTilesForRollback(Tile currentTile, Tile selectedTile) {
+
+        tilesRollback.setCurrentTile(currentTile);
+        tilesRollback.setSelectedTile(selectedTile);
         tilesRollback.setCurrentPiece(currentTile.getPiece());
         tilesRollback.setSelectedPiece(selectedTile.getPiece());
     }
@@ -48,19 +43,20 @@ class Check {
 
     private static void rollbackTilesAfterCheckTest(Tile currentTile, Tile selectedTile) {
         if (currentTile != selectedTile) {
+            selectedTile = tilesRollback.getSelectedTile();
+            currentTile = tilesRollback.getCurrentTile();
             selectedTile.setPiece(tilesRollback.getSelectedPiece());
             currentTile.setPiece(tilesRollback.getCurrentPiece());
         }
     }
 
-    private static Boolean canSelectedPieceAttackTheKing (Tile testingEnemyPieceTile, Tile kingTile, Chessboard chessboard){
-        return testingEnemyPieceTile.getPiece().canPieceDoSpecificMove(testingEnemyPieceTile, kingTile, chessboard);
+    private static Boolean canSelectedPieceAttackTheKing (Position p, Tile testingEnemyPieceTile, Tile kingTile){
+        p.currentTile = testingEnemyPieceTile;
+        p.selectedTile = kingTile;
+        return PieceMoveValidator.canMove(p);
     }
 
-    private static Tile findKingTileFromChessboard(Chessboard chessboard, Piece allyPiece) {
-        Piece.Color kingColor = allyPiece.getColor();
-        Tile[][]tiles = chessboard.getTiles();
-
+    private static Tile findKingTileFromChessboard(Tile[][] tiles, Color kingColor) {
         for (Tile[] row : tiles) {
             for (Tile tile : row) {
                 Piece piece = tile.getPiece();
@@ -72,10 +68,17 @@ class Check {
         return null;
     }
 
+    private static Color findOpponentPiecesColor(Color currentPlayerColor) {
+        if (currentPlayerColor == Color.WHITE){
+            return Color.BLACK;
+        } return  Color.WHITE;
+    }
     @Getter
     @Setter
     private static class TilesRollback {
 
+        Tile currentTile;
+        Tile selectedTile;
         Piece currentPiece;
         Piece selectedPiece;
     }
