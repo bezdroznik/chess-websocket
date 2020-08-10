@@ -5,7 +5,7 @@ import pl.bezdroznik.chesswebsocket.chess.Tile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoveValidator {
+public class Move {
 
     public static List<Tile> findPossibleMoves(Position p) {
         Tile currentTile = p.currentTile;
@@ -14,7 +14,7 @@ public class MoveValidator {
             for (Tile testingTile : row) {
                 p.selectedTile = testingTile;
                 p.currentTile = currentTile;
-                if (canPieceMove(p) || Castling.canCastling(p) || EnPassant.canEnPassan(p)) {
+                if (canPieceMove(p) || Castling.canCastle(p) || EnPassant.canEnPassan(p)) {
                     possibleMoves.add(testingTile);
                 }
             }

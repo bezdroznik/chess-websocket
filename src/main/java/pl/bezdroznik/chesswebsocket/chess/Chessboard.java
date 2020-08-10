@@ -69,18 +69,4 @@ public class Chessboard {
         tiles[3].setPiece(new Queen(color));
         tiles[4].setPiece(new King(color));
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-         for (Tile[] row : tiles) {
-            for (Tile column : row) {
-                sb.append(column.toString())
-                .append("\t");
-            }
-            sb.append("\n");
-         }
-         return sb.toString();
-    }
 }

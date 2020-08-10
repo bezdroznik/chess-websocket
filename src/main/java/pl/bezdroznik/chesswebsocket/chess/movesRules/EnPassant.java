@@ -16,7 +16,7 @@ public class EnPassant {
     }
 
     private static void updateEnPassantState(GameState gs, Tile selectedTile){
-        if (gs.currentTile.getPiece() instanceof Pawn && !gs.currentTile.getPiece().didMove){
+        if (gs.currentTile.getPiece() instanceof Pawn && !gs.currentTile.getPiece().hasMove){
             if (gs.currentTile.getRow() == 1 && selectedTile.getRow() == 3){
                 gs.tileForEnPassanMoveAgainstWhitePlayer = gs.tiles[2][gs.currentTile.getColumn()];
             } else if(gs.currentTile.getRow() == 6 && selectedTile.getRow() == 4) {
