@@ -7,13 +7,13 @@ import pl.bezdroznik.chesswebsocket.chess.pieces.Rook;
 
 public class Castling {
 
-    public static boolean canCastling(Position p) {
+    public static boolean canCastle(Position p) {
         if (p.currentTile.getPiece() == null || p.selectedTile.getPiece() == null){
             return false;
         }
         boolean piecesInstanceCondition = p.currentTile.getPiece() instanceof King && p.selectedTile.getPiece() instanceof Rook;
         boolean colorCondition = p.currentTile.getPiece().getColor() == p.selectedTile.getPiece().getColor();
-        boolean didMoveCondition = !p.currentTile.getPiece().didMove && !p.selectedTile.getPiece().didMove;
+        boolean didMoveCondition = !p.currentTile.getPiece().hasMove && !p.selectedTile.getPiece().hasMove;
         return (piecesInstanceCondition && didMoveCondition && colorCondition
                 && PieceMoveValidator.isWayFreeOfPieces(p) && checkCondition(p));
     }
@@ -34,7 +34,7 @@ public class Castling {
         return condition;
     }
 
-    public static void castlingMove(Position p) {
+    public static void castleMove(Position p) {
         if (p.selectedTile.getColumn() == 0) {
             updateKingAndRookPosition(p, 2, 3);
         } else if (p.selectedTile.getColumn() == 7) {
@@ -43,8 +43,8 @@ public class Castling {
     }
 
     private static void updateKingAndRookPosition(Position p, int newKingColumn, int newRookColumn) {
-        p.selectedTile.getPiece().didMove = true;
-        p.currentTile.getPiece().didMove = true;
+        p.selectedTile.getPiece().hasMove = true;
+        p.currentTile.getPiece().hasMove = true;
         p.tiles[p.currentTile.getRow()][newRookColumn].setPiece(p.selectedTile.getPiece());
         p.tiles[p.currentTile.getRow()][newKingColumn].setPiece(p.currentTile.getPiece());
         p.tiles[p.currentTile.getRow()][p.selectedTile.getColumn()].setPiece(null);

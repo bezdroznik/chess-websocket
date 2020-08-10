@@ -76,7 +76,7 @@ public class PieceMoveValidator {
     private static boolean canPawnMove(Position p) {
         boolean firstPawnMoveDirectionCondition = getMoveVectorV(p) == pawnMoveDirection(p.currentTile.getPiece()) * 2;
         boolean isTileInFrontOfPawnEmpty = isTileInFrontOfPawnEmpty(p);
-        boolean firstPawnMoveCondition = !p.currentTile.getPiece().didMove && firstPawnMoveDirectionCondition && isTileInFrontOfPawnEmpty;
+        boolean firstPawnMoveCondition = !p.currentTile.getPiece().hasMove && firstPawnMoveDirectionCondition && isTileInFrontOfPawnEmpty;
 
         return (firstPawnMoveCondition || pawnMoveDirectionCondition(p))
                 && getMoveVectorH(p) == 0 && isSelectedTileEmpty(p.selectedTile);

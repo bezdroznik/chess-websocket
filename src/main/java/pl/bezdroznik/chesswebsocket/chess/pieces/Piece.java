@@ -7,10 +7,10 @@ import pl.bezdroznik.chesswebsocket.chess.Color;
 public class Piece {
 
     private final Color color;
-    public boolean didMove;
+    public boolean hasMove;
 
     public Piece(Color color) {
         this.color = color;
-        this.didMove = false;
+        this.hasMove = false;
     }
 }

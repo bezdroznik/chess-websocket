@@ -3,7 +3,7 @@ package pl.bezdroznik.chesswebsocket.chess;
 import lombok.Getter;
 import pl.bezdroznik.chesswebsocket.chess.movesRules.Castling;
 import pl.bezdroznik.chesswebsocket.chess.movesRules.EnPassant;
-import pl.bezdroznik.chesswebsocket.chess.movesRules.MoveValidator;
+import pl.bezdroznik.chesswebsocket.chess.movesRules.Move;
 import pl.bezdroznik.chesswebsocket.chess.movesRules.Promotion;
 import pl.bezdroznik.chesswebsocket.chess.pieces.Piece;
 
@@ -21,7 +21,7 @@ public class Analyze {
             Tile currentTile = findTileFromChessboard(gs, selectedTile.getName());
             if (currentTile.getPiece() != null && !gs.isTileSelected && checkTurn(gs, currentTile.getPiece(), userName)) {
                 Position position = new Position(gs, currentTile, null);
-                gs.possibleMoves = MoveValidator.findPossibleMoves(position);
+                gs.possibleMoves = Move.findPossibleMoves(position);
                 if (!gs.possibleMoves.isEmpty()) {
                     gs.currentTile = currentTile;
                     gs.isTileSelected = true;
@@ -65,12 +65,12 @@ public class Analyze {
         if (gs.possibleMoves.contains(selectedTile)) {
             EnPassant.enPassanMove(gs, selectedTile);
             Position position = new Position(gs, gs.currentTile, selectedTile);
-            if (Castling.canCastling(position)) {
-                Castling.castlingMove(position);
+            if (Castling.canCastle(position)) {
+                Castling.castleMove(position);
             } else {
                 selectedTile.setPiece(gs.currentTile.getPiece());
                 gs.currentTile.setPiece(null);
-                selectedTile.getPiece().didMove = true;
+                selectedTile.getPiece().hasMove = true;
             }
 
             if (Promotion.canPromotePawn(selectedTile)) {
@@ -85,7 +85,7 @@ public class Analyze {
 
     public static void promotion(GameState gs, SelectedTile selectedTile) {
         gs.promotionPawnTile.setPiece(Promotion.promotion(gs.promotionPawnTile, selectedTile.getName()));
-        gs.promotionPawnTile.getPiece().didMove = true;
+        gs.promotionPawnTile.getPiece().hasMove = true;
         gs.canPromote = false;
     }
 
@@ -106,7 +106,7 @@ public class Analyze {
         List<Tile> allTilesOccupiedByCurrentPlayerPieces = findAllTilesOccupiedByPiecesOfTheSameColor(gs.tiles, gs.turn);
         for (Tile currentPlayerPieceTile : allTilesOccupiedByCurrentPlayerPieces) {
             position.currentTile = currentPlayerPieceTile;
-            if (!MoveValidator.findPossibleMoves(position).isEmpty()) {
+            if (!Move.findPossibleMoves(position).isEmpty()) {
                 allTilesOccupiedByPiecesThatCanMove.add(currentPlayerPieceTile);
             }
         }
